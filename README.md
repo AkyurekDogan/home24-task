@@ -29,10 +29,9 @@ Returns the following details
 | Task                                            | Duration |
 |-------------------------------------------------|----------|
 | Requirement analysis & architecture design      | 1h       |
-| Core architecture implementation & edge cases   | 2h       |
-| Service development                             | 5h       |
-| Testing & documentation                         | 0h       |
-| Terraform & Kubernetes integration              | 0.5h     |
+| Core architecture implementation & edge cases   | 1h       |
+| Service development                             | 2h       |
+| Testing & documentation                         | 1h       |
 | Deployment & hand-off                           | 0.5h     |
 
 ---
@@ -87,7 +86,7 @@ Returns the following details
 - Following steps will be done automatically when you use the make file however better to check
     - Please copy the `.env.dist file as .env` on your local.
     - Please copy the `.config.yml.dist as config.yml` on your local
-- The web page must be opened automatically otherwise please visit the `localhost:8080` if it's not due your browser or local security settings please visit manually.
+- The web page must be opened automatically otherwise please visit the `localhost:8080` if it's not due to your browser or local security settings please visit manually.
 ---
 
 ### Step 3 – Test the Application
