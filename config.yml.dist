@@ -1,6 +1,5 @@
 app:
   service:
-    schema: http
     host: localhost
     port: 8080
   template:

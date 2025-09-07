@@ -5,6 +5,8 @@
 ---
 # Home24 | Website Analyzer
 
+## 📦 Requirements
+
 Gets the following inputs from the customer
 - url
     - check validity of the url if not fail fast.
@@ -39,21 +41,26 @@ Returns the following details
 
 - [x] Requirement gathering & edge case analysis
 - [x] Project layout & git repository initialization
-- [ ] System design and architecture skeleton
-- [ ] MVP & dry run.
-- [ ] Implementation improvements
-- [ ] UI Implementation
+- [x] System design and architecture skeleton
+- [x] MVP & dry run.
+- [x] Implementation improvements
+- [x] UI Implementation
 - [ ] Unit test coverage check & increase
-- [ ] Project documentation
-- [ ] Project delivery to Home24 team
+- [x] Project documentation
+- [x] Project delivery to Home24 team
 
 ---
 
 ### ⚠️ Known Limitations / Missing parts
 
-- I used the uber/zap for logging but due to time constraints I initiated as sugar version with production config so I did not used DEBUG mode most of the logs can be converted to debug mode.
-- I made the different functionalities as plugins so we can activate these plugins by need using config. (file main.go, line 54:57 )
-- Async system can be more compdlext and efficient but due to time constraint I tried to show something that this operations can be doable in concurrent way. (file html_analyzer.go, line 25:40 )
+- Logging is implemented using uber/zap. Due to time constraints, I initialized it with the production configuration using the Sugared Logger. Most logs could be converted to DEBUG level for more detailed output.
+- Different functionalities are implemented as plugins, which can be activated on demand via configuration (see main.go, lines 54–57).
+- Asynchronous processing is demonstrated in a basic way to show concurrency is possible. With more time, the system could be made more efficient (see html_analyzer.go, lines 25–40).
+- Unit, E2E, and performance tests were not added due to time constraints.
+- Concurrency could be improved further; several steps, such as link processing and validation, can be optimized for better efficiency.
+- Test cases were primarily performed on https://bbc.com since it is a feature-rich site. Larger websites were not pushed to avoid excessive processing time.
+- Containerization is skipped.
+- CI/CD pipeline is skipped.
 
 ---
 
@@ -61,7 +68,8 @@ Returns the following details
 
 ### 🧰 Prerequisites
 
-TBD
+- Golang must be installed on local system
+- You can check the task.pdf in the source code for task details.
 
 ---
 
@@ -69,36 +77,24 @@ TBD
 
 ### Step 1 – Setup
 
+- Golang must be installed in the system.
+
 ---
 
 ### Step 2 – Run Options
 
-#### ✅ Option 1: Developer Mode (Recommended)
-
+- Please use the make file command to run the project `make run`
+- Following steps will be done automatically when you use the make file however better to check
+    - Please copy the `.env.dist file as .env` on your local.
+    - Please copy the `.config.yml.dist as config.yml` on your local
+- The web page must be opened automatically otherwise please visit the `localhost:8080` if it's not due your browser or local security settings please visit manually.
 ---
 
-#### 🐳 Option 2: Docker Compose
----
+### Step 3 – Test the Application
 
----
-
-### Step 3 – Test the API
-
-
-#### 🧪 Option 1: grpcurl (CLI)
-```
-
-```
-
-#### 🧪 Option 2: Postman
-
-You can also use [Postman](https://www.postman.com/) 
-
----
-
-## 🧱 Architecture Diagram
-
----
+- You can use following websites to check the application (simpler to extensive)
+    - example.com -> Very clean so better to check simple steps.
+    - bbc.com -> I used for local tests, pretty packed website.
 
 ## 📸 Screenrecordings
 
