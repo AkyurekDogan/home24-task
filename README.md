@@ -50,16 +50,29 @@ Returns the following details
 
 ---
 
-### ⚠️ Known Limitations / Missing parts
+### ⚠️ Limitations
 
-- Logging is implemented using uber/zap. Due to time constraints, I initialized it with the production configuration using the Sugared Logger. Most logs could be converted to DEBUG level for more detailed output.
-- Different functionalities are implemented as plugins, which can be activated on demand via configuration (see main.go, lines 54–57).
-- Asynchronous processing is demonstrated in a basic way to show concurrency is possible. With more time, the system could be made more efficient (see html_analyzer.go, lines 25–40).
-- Unit, E2E, and performance tests were not added due to time constraints.
-- Concurrency could be improved further; several steps, such as link processing and validation, can be optimized for better efficiency.
+- Logging is implemented using uber/zap. Due to time constraint, I initialized it with the production configuration using the Sugared Logger. Most logs could be converted to DEBUG level for more detailed output.
+- Different functionalities are implemented as plugins, which can be activated on demand via configuration (see main.go, lines 54–57), however this is just for demonstraion since plugins are unfortunately tighlty couple to a few structs due to time constraint.
+- Asynchronous processing is demonstrated in a basic way to show concurrency is possible. With more time, the system could be made more efficient (see html_analyzer.go, lines 25–40). All analyzing process can be async and concurrent.
 - Test cases were primarily performed on https://bbc.com since it is a feature-rich site. Larger websites were not pushed to avoid excessive processing time.
 - Containerization is skipped.
 - CI/CD pipeline is skipped.
+- Metrics & improvement performance is skipped.
+
+### ⚠️ Missing parts / Improvements
+- Advanced Logging & Metrics: Implement detailed logging and metrics to measure processing times, identify bottlenecks, and monitor system health effectively.
+- Concurrency & Architecture: Current concurrency can be improved. Consider an event-driven architecture to handle tasks more efficiently, monitor processing, and reduce false positives.
+- Testing: Unit, end-to-end (E2E), and performance tests were not included due to time constraints. Adding these is essential for reliability and maintainability.
+- Plugin Configuration: Make all plugins configurable through a configuration file or flagging system to allow selective execution and reduce unnecessary processing.
+- Component Decoupling: Separate requesting, analyzing, and classification logic into independent, event-driven components to allow horizontal scaling and better resource management.
+- Timeouts & Monitoring: Introduce more granular timeouts per task, collect website-specific metrics, and set up alerting systems to detect anomalies or failures.
+- Frontend UX Enhancements: Improve the frontend to provide more informative feedback, guidance, and insights for users during analysis.
+- Performance & Load Testing: Conduct performance and load testing to determine system limits and define clear service-level agreements (SLAs).
+- Containerization & Orchestration: Improve Docker containerization and consider Kubernetes deployment for scalability, fault tolerance, and easy management.
+- Security: Strengthen security measures, including input validation, TLS verification, rate limiting, and safe handling of external URLs.
+- Feature Expansion: Extend the scope of analysis to cover SEO, accessibility, and other advanced webpage features based on business requirements rather than focusing on a limited set of elements.
+- Instead of a service/app implementation this problem can be solved as data pipeline approach in a better manner I think.
 
 ---
 
