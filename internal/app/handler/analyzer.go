@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/AkyurekDogan/home24-task/internal/app/dto"
-	htmlanalyzer "github.com/AkyurekDogan/home24-task/internal/app/html_analyzer"
+	"github.com/AkyurekDogan/home24-task/internal/app/model"
 	"github.com/AkyurekDogan/home24-task/internal/app/service"
 
 	"go.uber.org/zap"
@@ -66,7 +66,7 @@ func (a *analyzer) Analyze(w http.ResponseWriter, r *http.Request) {
 		)
 		return
 	}
-	result, err := a.analyzerService.Analyze(ctx, urlSenitized)
+	result, err := a.analyzerService.Analyze(ctx, *urlSenitized)
 	if err != nil {
 		a.logger.Errorf("analyzer service is failed, error: %v", err)
 		a.toResponseError(
@@ -83,20 +83,29 @@ func (a *analyzer) Analyze(w http.ResponseWriter, r *http.Request) {
 
 func (a *analyzer) toResponseSuccess(
 	w http.ResponseWriter,
-	result htmlanalyzer.AnalysisResult,
+	result model.AnalysisResult,
 ) {
 	response := dto.Response{
 		Result: &dto.Analyze{
-			URL:            result.URL,
-			FinalURL:       result.FinalURL,
-			HTMLVersion:    result.HTMLVersion,
-			Title:          result.Title,
-			HeadingCounts:  result.HeadingCounts,
-			TotalLinks:     result.TotalLinks,
-			InternalLinks:  result.InternalLinks,
-			ExternalLinks:  result.ExternalLinks,
-			Inaccessible:   result.Inaccessible,
-			LoginFormFound: result.LoginFormFound,
+			URL:          result.Query.BaseUrl.String(),
+			Version:      result.Version,
+			Title:        result.Title,
+			HeaderCounts: result.Headers,
+			TotalLinks:   result.Links.Count(),
+			InternalLinks: dto.Link{
+				Accessible:   result.Links.GetCounts(model.UrlScopeInternal, true),
+				Inaccessible: result.Links.GetCounts(model.UrlScopeInternal, false),
+			},
+			ExternalLinks: dto.Link{
+				Accessible:   result.Links.GetCounts(model.UrlScopeExternal, true),
+				Inaccessible: result.Links.GetCounts(model.UrlScopeExternal, false),
+			},
+			HasLoginForm: func(hasLoginForm bool) string {
+				if hasLoginForm {
+					return "Yes"
+				}
+				return "No"
+			}(result.HasLoginForm),
 		},
 		Error: nil,
 	}
@@ -131,26 +140,26 @@ func (a *analyzer) renderResponse(w http.ResponseWriter, response dto.Response) 
 }
 
 // ValidateURL ensures the URL is well-formed and uses http/https schema
-func (a *analyzer) validateURL(input string) (string, error) {
+func (a *analyzer) validateURL(input string) (*url.URL, error) {
 	if strings.TrimSpace(input) == "" {
-		return "", errors.New("URL cannot be empty")
+		return nil, errors.New("URL cannot be empty")
 	}
 
 	// Parse and check for errors
 	parsed, err := url.ParseRequestURI(input)
 	if err != nil {
-		return "", errors.New("invalid URL format")
+		return nil, errors.New("invalid URL format")
 	}
 
 	// Require http or https scheme
 	if parsed.Scheme != "http" && parsed.Scheme != "https" {
-		return "", errors.New("URL must start with http:// or https://")
+		return nil, errors.New("URL must start with http:// or https://")
 	}
 
 	// Require a host (domain or IP)
 	if parsed.Host == "" {
-		return "", errors.New("URL must have a valid host")
+		return nil, errors.New("URL must have a valid host")
 	}
 
-	return parsed.String(), nil
+	return parsed, nil
 }

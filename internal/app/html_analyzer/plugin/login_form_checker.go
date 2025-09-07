@@ -4,18 +4,21 @@ import (
 	"context"
 	"strings"
 
+	"github.com/AkyurekDogan/home24-task/internal/app/model"
 	"github.com/PuerkitoBio/goquery"
 )
 
 type loginFormCheckerPlugin struct {
 }
 
+// NewLoginFormCheckerPlugin creates a new instance of loginFormCheckerPlugin.
 func NewLoginFormCheckerPlugin() Plugin {
 	return &loginFormCheckerPlugin{}
 }
 
-func (vp *loginFormCheckerPlugin) Do(ctx context.Context, htmlDoc *goquery.Document, ar *AnalysisResult) {
-	ar.LoginFormFound = detectLoginForm(htmlDoc)
+// Do analyzes the HTML document to check for login forms and updates the AnalysisResult.
+func (vp *loginFormCheckerPlugin) Do(ctx context.Context, htmlDoc *goquery.Document, ar *model.AnalysisResult) {
+	ar.HasLoginForm = detectLoginForm(htmlDoc)
 }
 
 func detectLoginForm(doc *goquery.Document) bool {
@@ -24,7 +27,7 @@ func detectLoginForm(doc *goquery.Document) bool {
 		// look for password inputs
 		if s.Find("input[type='password']").Length() > 0 {
 			found = true
-			return false
+			return false // break the loop
 		}
 		// look for password-like names or ids
 		pwdInputs := s.Find("input")
@@ -40,7 +43,7 @@ func detectLoginForm(doc *goquery.Document) bool {
 			return true
 		})
 		if found {
-			return false
+			return false // break the loop
 		}
 		// detect submit with login text
 		if s.Find("button").FilterFunction(func(i int, b *goquery.Selection) bool {

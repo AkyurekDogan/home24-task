@@ -1,15 +1,121 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>URL Analyzer</title>
   <style>
-    body{font-family: Arial, Helvetica, sans-serif; max-width:900px; margin: 2rem auto; padding:1rem;}
-    input[type=text]{width:80%; padding:.6rem; font-size:1rem;}
-    button{padding:.6rem 1rem; font-size:1rem;}
-    pre{background:#f6f6f6;padding:1rem;border-radius:6px;}
-    table{width:100%; border-collapse: collapse;}
-    th,td{padding:.5rem;text-align:left;border-bottom:1px solid #eee;}
+    /* Global styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f0f2f5;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4a90e2;
+      margin-bottom: 2rem;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    input[type=text] {
+      width: 70%;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px 0 0 6px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input[type=text]:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+    }
+
+    button {
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      background: #4a90e2;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 0 6px 6px 0;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #357ABD;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      color: #4a90e2;
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 0.2rem;
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      color: #333;
+    }
+
+    pre {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: linear-gradient(90deg, #4a90e2, #357ABD);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    /* Card style for results */
+    .card {
+      background: #fff;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
   </style>
 </head>
 <body>
@@ -20,31 +126,58 @@
   </form>
 
   {{if .Error}}
-    <h2>Error</h2>
-    <pre>{{.Error.Code}}</pre>
-    <pre>{{.Error.Message}}</pre>
+    <div class="card">
+      <h2>Error</h2>
+      <pre>{{.Error.Code}}</pre>
+      <pre>{{.Error.Message}}</pre>
+    </div>
   {{end}}
 
   {{if .Result}}
-    <h2>Results for: {{.Result.URL}}</h2>
-    <table>
-      <tr><th>Final URL</th><td>{{.Result.FinalURL}}</td></tr>
-      <tr><th>HTML version</th><td>{{.Result.HTMLVersion}}</td></tr>
-      <tr><th>Title</th><td>{{.Result.Title}}</td></tr>
-      <tr><th>Login form</th><td>{{if .Result.LoginFormFound}}Yes{{else}}No{{end}}</td></tr>
-      <tr><th>Total links</th><td>{{.Result.TotalLinks}}</td></tr>
-      <tr><th>Internal links</th><td>{{.Result.InternalLinks}}</td></tr>
-      <tr><th>External links</th><td>{{.Result.ExternalLinks}}</td></tr>
-      <tr><th>Inaccessible links</th><td>{{.Result.Inaccessible}}</td></tr>
-    </table>
+    <div class="card">
+      <h2>Results for: {{.Result.URL}}</h2>
+      <h3>Basic properties</h3>
+      <table>
+        <tr><th>HTML version</th><td>{{.Result.Version}}</td></tr>
+        <tr><th>Title</th><td>{{.Result.Title}}</td></tr>
+        <tr><th>Has login form</th><td>{{.Result.HasLoginForm}}</td></tr>
+      </table>
 
-    <h3>Headings</h3>
-    <table>
-      <tr><th>Level</th><th>Count</th></tr>
-      {{range $k, $v := .Result.HeadingCounts}}
-        <tr><td>{{$k}}</td><td>{{$v}}</td></tr>
-      {{end}}
-    </table>
+      <h3>Links Analysis</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Total Link Count</th>
+            <th colspan="2">{{.Result.TotalLinks}}</th>
+          </tr>
+          <tr>
+            <th>Link Type</th>
+            <th>Accessible Count</th>
+            <th>Inaccessible Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Internal Links</td>
+            <td>{{.Result.InternalLinks.Accessible}}</td>
+            <td>{{.Result.InternalLinks.Inaccessible}}</td>
+          </tr>
+          <tr>
+            <td>External Links</td>
+            <td>{{.Result.ExternalLinks.Accessible}}</td>
+            <td>{{.Result.ExternalLinks.Inaccessible}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Headers</h3>
+      <table>
+        <tr><th>Level</th><th>Count</th></tr>
+        {{range $k, $v := .Result.HeaderCounts}}
+          <tr><td>{{$k}}</td><td>{{$v}}</td></tr>
+        {{end}}
+      </table>
+    </div>
   {{end}}
 </body>
 </html>

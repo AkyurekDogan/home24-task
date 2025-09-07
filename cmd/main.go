@@ -10,6 +10,7 @@ import (
 
 	"github.com/AkyurekDogan/home24-task/internal/app/handler"
 	htmlanalyzer "github.com/AkyurekDogan/home24-task/internal/app/html_analyzer"
+	plugins "github.com/AkyurekDogan/home24-task/internal/app/html_analyzer/plugin"
 	"github.com/AkyurekDogan/home24-task/internal/app/infrastructure/config"
 	"github.com/AkyurekDogan/home24-task/internal/app/infrastructure/logger"
 	"github.com/AkyurekDogan/home24-task/internal/app/requester"
@@ -71,12 +72,12 @@ func main() {
 		},
 	}
 	requester := requester.New(client)
-	htmlAnalyzer := htmlanalyzer.NewHTMLAnalyzer(
-		htmlanalyzer.NewVersionPlugin(),
-		htmlanalyzer.NewTitlePlugin(),
-		htmlanalyzer.NewHeaderPlugin(),
-		htmlanalyzer.NewLinksPlugin(),
-		htmlanalyzer.NewLoginFormCheckerPlugin(),
+	htmlAnalyzer := htmlanalyzer.New(
+		plugins.NewVersionPlugin(),
+		plugins.NewTitlePlugin(),
+		plugins.NewHeaderPlugin(),
+		plugins.NewLinksPlugin(client),
+		plugins.NewLoginFormCheckerPlugin(),
 	)
 
 	analyzerService := service.NewAnalyzer(requester, htmlAnalyzer)

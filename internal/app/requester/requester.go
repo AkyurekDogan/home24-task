@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	httpclient "github.com/AkyurekDogan/home24-task/internal/app/infrastructure/http_client"
 	"github.com/PuerkitoBio/goquery"
 )
 
 type Requester interface {
-	Do(ctx context.Context, url string) (*goquery.Document, error)
+	Do(ctx context.Context, url url.URL) (*goquery.Document, error)
 }
 
 type requester struct {
@@ -22,9 +23,9 @@ func New(httpClient httpclient.Doer) Requester {
 		httpClient: httpClient,
 	}
 }
-func (r *requester) Do(ctx context.Context, url string) (*goquery.Document, error) {
+func (r *requester) Do(ctx context.Context, url url.URL) (*goquery.Document, error) {
 	// Create a new request
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", url.String(), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}

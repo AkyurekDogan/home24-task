@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/AkyurekDogan/home24-task/internal/app/model"
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/net/html"
 )
@@ -11,12 +12,14 @@ import (
 type versionPlugin struct {
 }
 
+// NewVersionPlugin creates a new instance of versionPlugin.
 func NewVersionPlugin() Plugin {
 	return &versionPlugin{}
 }
 
-func (vp *versionPlugin) Do(ctx context.Context, htmlDoc *goquery.Document, ar *AnalysisResult) {
-	ar.HTMLVersion = getHTMLVersion(htmlDoc)
+// Do analyzes the HTML document to determine its version and updates the AnalysisResult.
+func (vp *versionPlugin) Do(ctx context.Context, htmlDoc *goquery.Document, ar *model.AnalysisResult) {
+	ar.Version = getHTMLVersion(htmlDoc)
 }
 
 func getHTMLVersion(doc *goquery.Document) string {
@@ -39,5 +42,5 @@ func getHTMLVersion(doc *goquery.Document) string {
 			}
 		}
 	}
-	return "Unknown/other"
+	return "Unknown/other" // some other versions also I guess since it is customizable
 }
