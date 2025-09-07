@@ -97,6 +97,11 @@ Returns the following details
 
 ## 📸 Screenrecordings
 
+https://github.com/user-attachments/assets/f1c1b7b0-441c-4684-944e-59da70f6fdfe
+
+https://github.com/user-attachments/assets/55685665-46fb-4ed2-81da-026b2cd7987e
+
+https://github.com/user-attachments/assets/0aea6257-9891-4dd1-985f-76c6b7e44c82
 
 ## 🤝 Contributing
 
