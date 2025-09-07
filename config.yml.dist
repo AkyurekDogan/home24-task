@@ -1,0 +1,13 @@
+app:
+  service:
+    schema: http
+    host: localhost
+    port: 8080
+  template:
+    path: ./internal/app/templates/index.html
+  requester:
+      http:
+        timeout: 15s
+        dial_context::
+          timeout: 10s
+          keep_alive: 10s

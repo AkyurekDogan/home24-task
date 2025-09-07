@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>URL Analyzer</title>
+  <style>
+    body{font-family: Arial, Helvetica, sans-serif; max-width:900px; margin: 2rem auto; padding:1rem;}
+    input[type=text]{width:80%; padding:.6rem; font-size:1rem;}
+    button{padding:.6rem 1rem; font-size:1rem;}
+    pre{background:#f6f6f6;padding:1rem;border-radius:6px;}
+    table{width:100%; border-collapse: collapse;}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid #eee;}
+  </style>
+</head>
+<body>
+  <h1>URL Analyzer</h1>
+  <form method="POST">
+    <input type="text" placeholder="https://example.com" name="url" required />
+    <button type="submit">Analyze</button>
+  </form>
+
+  {{if .Error}}
+    <h2>Error</h2>
+    <pre>{{.Error.Code}}</pre>
+    <pre>{{.Error.Message}}</pre>
+  {{end}}
+
+  {{if .Result}}
+    <h2>Results for: {{.Result.URL}}</h2>
+    <table>
+      <tr><th>Final URL</th><td>{{.Result.FinalURL}}</td></tr>
+      <tr><th>HTML version</th><td>{{.Result.HTMLVersion}}</td></tr>
+      <tr><th>Title</th><td>{{.Result.Title}}</td></tr>
+      <tr><th>Login form</th><td>{{if .Result.LoginFormFound}}Yes{{else}}No{{end}}</td></tr>
+      <tr><th>Total links</th><td>{{.Result.TotalLinks}}</td></tr>
+      <tr><th>Internal links</th><td>{{.Result.InternalLinks}}</td></tr>
+      <tr><th>External links</th><td>{{.Result.ExternalLinks}}</td></tr>
+      <tr><th>Inaccessible links</th><td>{{.Result.Inaccessible}}</td></tr>
+    </table>
+
+    <h3>Headings</h3>
+    <table>
+      <tr><th>Level</th><th>Count</th></tr>
+      {{range $k, $v := .Result.HeadingCounts}}
+        <tr><td>{{$k}}</td><td>{{$v}}</td></tr>
+      {{end}}
+    </table>
+  {{end}}
+</body>
+</html>

@@ -51,7 +51,9 @@ Returns the following details
 
 ### ⚠️ Known Limitations / Missing parts
 
-TBD
+- I used the uber/zap for logging but due to time constraints I initiated as sugar version with production config so I did not used DEBUG mode most of the logs can be converted to debug mode.
+- I made the different functionalities as plugins so we can activate these plugins by need using config. (file main.go, line 54:57 )
+- Async system can be more compdlext and efficient but due to time constraint I tried to show something that this operations can be doable in concurrent way. (file html_analyzer.go, line 25:40 )
 
 ---
 
